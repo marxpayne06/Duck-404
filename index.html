@@ -10,7 +10,6 @@
 <meta property="og:title" content="DUCK404 — DUCK NOT FOUND">
 <meta property="og:description" content="Something disappeared at 04:04. Nobody knows where it went. FIND THE DUCK.">
 <meta property="og:type" content="website">
-<!-- TODO: add og:image once artwork is ready -->
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="DUCK404 — DUCK NOT FOUND">
 <meta name="twitter:description" content="Something disappeared at 04:04. FIND THE DUCK.">
@@ -22,10 +21,6 @@
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
-/* Kleemax — self-hosted, files live in ./fonts/ next to this HTML.
-   Demo build only includes UPPERCASE letters, numbers and a few
-   symbols — so it's used only on all-caps / numeric elements below;
-   everything else keeps the Orbitron/Rajdhani pairing. */
 @font-face{
   font-family:"Kleemax";
   src:url("./KleemaxDemo.otf") format("opentype"),
@@ -34,9 +29,6 @@
   font-display:swap;
 }
 
-/* ================================================================
-   TOKENS — cyberpunk / system-window aesthetic
-   ================================================================ */
 :root{
   --bg:        #04060b;
   --bg2:       #070c16;
@@ -81,7 +73,6 @@ body{
 a{ color:inherit; }
 ::selection{ background:var(--cyan); color:#000; }
 
-/* ---------------- background: vignette + slow radar sweep ---------------- */
 .bg-vignette{
   position:fixed; inset:0; z-index:0; pointer-events:none;
   background:
@@ -119,8 +110,6 @@ a{ color:inherit; }
   .bg-radar__sweep{ animation:none; }
 }
 
-
-/* ---------------- boot overlay ---------------- */
 .boot{
   position:fixed; inset:0; z-index:50;
   background:#000;
@@ -141,7 +130,6 @@ a{ color:inherit; }
   .boot{ animation-duration:0.01s; animation-delay:0.2s; }
 }
 
-/* ---------------- top HUD readout ---------------- */
 .readout{
   position:fixed; top:0; left:0; right:0; z-index:10;
   display:flex; justify-content:space-between; align-items:center;
@@ -157,7 +145,6 @@ a{ color:inherit; }
   box-shadow:0 0 8px currentColor; animation:dotPulse 1.4s ease-in-out infinite; }
 @keyframes dotPulse{ 0%,100%{ opacity:1; transform:scale(1); } 50%{ opacity:.35; transform:scale(0.7); } }
 
-/* ---------------- hud panel (reusable) ---------------- */
 .hud-panel{
   position:relative;
   background:var(--panel);
@@ -181,9 +168,6 @@ a{ color:inherit; }
   .hud-panel.reveal{ transition:opacity .2s linear; transform:none; filter:none; }
 }
 
-/* ================================================================
-   HERO
-   ================================================================ */
 .hero{
   min-height:100svh; position:relative; z-index:2;
   display:flex; flex-direction:column; align-items:center; justify-content:center;
@@ -235,7 +219,6 @@ a{ color:inherit; }
 .ripple{ position:absolute; border-radius:50%; background:rgba(255,255,255,0.5); transform:scale(0); animation:rippleOut .6s ease-out forwards; pointer-events:none; }
 @keyframes rippleOut{ to{ transform:scale(3.2); opacity:0; } }
 
-/* ---------------- countdown ---------------- */
 .countdown{ margin-top:56px; opacity:0; animation:fadeUp .7s var(--ease) 2.1s forwards; }
 .countdown__label{ font-family:var(--font-display); font-size:10px; letter-spacing:0.24em; color:var(--ink-dim); text-transform:uppercase; margin-bottom:14px; }
 .countdown__row{ display:flex; gap:12px; justify-content:center; }
@@ -262,9 +245,6 @@ a{ color:inherit; }
 @keyframes bob{ 0%,100%{ transform:translateY(0);} 50%{ transform:translateY(7px);} }
 @media (prefers-reduced-motion:reduce){ .scroll-hint__arrow{ animation:none; } }
 
-/* ================================================================
-   DOSSIER / SYSTEM WINDOW
-   ================================================================ */
 .dossier{ max-width:var(--maxw); margin:0 auto; padding:30px 20px 110px; position:relative; z-index:2; }
 
 .file{ padding:28px 24px; }
@@ -301,7 +281,6 @@ a{ color:inherit; }
 
 .file__glitch{ margin-top:20px; font-family:"Rajdhani",monospace; font-size:11px; color:var(--cyan-soft); letter-spacing:0.04em; word-break:break-all; user-select:none; opacity:0.7; }
 
-/* ---------------- big day card ---------------- */
 .daycard{
   display:flex; align-items:baseline; justify-content:center; gap:14px;
   padding:22px 20px; margin-bottom:16px;
@@ -317,54 +296,151 @@ a{ color:inherit; }
 }
 .daycard__num.pulse{ animation:tickPulse .45s var(--ease-spring); }
 
-/* ---------------- decrypt button + popup ---------------- */
+/* ---------------- decrypt expandable panel ---------------- */
 .decrypt-row{ position:relative; margin-top:22px; display:flex; justify-content:center; }
+
 .decrypt-btn{
   font-family:var(--font-display); font-size:11px; letter-spacing:0.12em; text-transform:uppercase;
   color:var(--cyan); background:transparent; border:1px solid var(--cyan-soft);
   padding:10px 18px; cursor:pointer; display:flex; align-items:center; gap:8px;
   clip-path:polygon(7px 0,100% 0,100% calc(100% - 7px),calc(100% - 7px) 100%,0 100%,0 7px);
-  transition:background .25s var(--ease), color .25s var(--ease), transform .2s var(--ease-spring);
+  transition:all .4s var(--ease);
+  position:relative; overflow:hidden;
 }
 .decrypt-btn:hover{ background:rgba(87,230,255,0.1); transform:translateY(-1px); }
 .decrypt-btn:active{ transform:translateY(0) scale(.97); }
 .decrypt-btn:focus-visible{ outline:2px solid var(--cyan); outline-offset:3px; }
 .decrypt-btn__dot{ width:6px; height:6px; border-radius:50%; background:var(--cyan); box-shadow:0 0 8px var(--cyan); animation:dotPulse 1.4s ease-in-out infinite; }
 
-.decrypt-popup{
-  position:absolute; top:calc(100% + 14px); left:50%; transform:translateX(-50%) scale(.85);
-  width:min(280px, 84vw);
-  background:var(--panel-solid); border:1px solid var(--cyan-soft);
-  padding:16px 16px 18px; z-index:5;
-  clip-path:polygon(10px 0,100% 0,100% calc(100% - 10px),calc(100% - 10px) 100%,0 100%,0 10px);
-  box-shadow:0 12px 40px rgba(0,0,0,.55), 0 0 24px rgba(87,230,255,.12);
-  opacity:0; pointer-events:none; visibility:hidden;
-  transform-origin:top center;
-  transition:opacity .25s var(--ease), transform .25s var(--ease-spring), visibility 0s linear .25s;
+.decrypt-btn.expanded{
+  width:100%;
+  max-width:500px;
+  padding:20px 24px;
+  background:var(--panel-solid);
+  border-color:var(--cyan);
+  box-shadow:0 0 30px rgba(87,230,255,0.15), inset 0 0 20px rgba(87,230,255,0.03);
+  cursor:default;
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  gap:12px;
 }
-.decrypt-popup.open{
-  opacity:1; transform:translateX(-50%) scale(1); pointer-events:auto; visibility:visible;
-  transition:opacity .25s var(--ease), transform .25s var(--ease-spring), visibility 0s;
-}
-.decrypt-popup__arrow{
-  position:absolute; top:-7px; left:50%; transform:translateX(-50%) rotate(45deg);
-  width:12px; height:12px; background:var(--panel-solid); border-left:1px solid var(--cyan-soft); border-top:1px solid var(--cyan-soft);
-}
-.decrypt-popup__label{ margin:0 0 6px; font-family:var(--font-display); font-size:9px; letter-spacing:0.14em; color:var(--ink-dim); text-transform:uppercase; }
-.decrypt-popup__text{ margin:0; font-size:13.5px; color:var(--ink); line-height:1.5; }
+.decrypt-btn.expanded:hover{ background:var(--panel-solid); transform:none; }
+.decrypt-btn.expanded .decrypt-btn__dot{ display:none; }
 
+.decrypt-btn__header{
+  display:flex; align-items:center; gap:8px;
+  font-family:var(--font-display); font-size:11px; letter-spacing:0.12em; text-transform:uppercase;
+  color:var(--cyan);
+}
+.decrypt-btn.expanded .decrypt-btn__header{
+  width:100%;
+  justify-content:space-between;
+}
 
-.filestrip{ display:flex; gap:8px; flex-wrap:wrap; margin-top:24px; justify-content:center; }
+.decrypt-btn__close{
+  font-size:16px; color:var(--ink-dim); cursor:pointer;
+  transition:color .2s var(--ease), transform .2s var(--ease);
+  line-height:1;
+}
+.decrypt-btn__close:hover{ color:var(--danger); transform:scale(1.15); }
+
+.decrypt-btn__content{
+  max-height:0; opacity:0; overflow:hidden;
+  transition:max-height .4s var(--ease), opacity .3s var(--ease) .1s;
+  width:100%;
+}
+.decrypt-btn.expanded .decrypt-btn__content{
+  max-height:300px; opacity:1;
+  transition:max-height .4s var(--ease), opacity .3s var(--ease) .15s;
+}
+
+.decrypt-btn__label{
+  margin:0 0 8px; font-family:var(--font-display); font-size:9px; letter-spacing:0.14em; color:var(--ink-dim); text-transform:uppercase;
+}
+.decrypt-btn__text{
+  margin:0; font-size:14px; color:var(--ink); line-height:1.6;
+}
+
+/* ---------------- filestrip ---------------- */
+.filestrip{ display:flex; gap:8px; flex-wrap:wrap; margin-top:24px; justify-content:center; position:relative; }
 .filestrip__item{
   font-family:var(--font-numeral); font-size:10px; letter-spacing:0.06em;
   padding:6px 10px; border:1px solid var(--line); color:var(--ink-dim);
   clip-path:polygon(6px 0,100% 0,100% 100%,0 100%,0 6px);
   opacity:0; transform:translateY(6px);
+  cursor:pointer;
+  transition:all .4s var(--ease);
+  user-select:none;
+  position:relative;
+}
+.filestrip__item:hover:not(.filestrip__item--locked){ 
+  background:rgba(87,230,255,0.08); 
+  border-color:var(--cyan-soft); 
+  transform:translateY(-2px);
 }
 .in-view .filestrip__item{ animation:fadeUp .4s var(--ease) forwards; }
 .filestrip__item--seen{ color:var(--cyan); border-color:var(--cyan-soft); }
 .filestrip__item--current{ color:var(--bg); background:var(--cyan); border-color:var(--cyan); box-shadow:0 0 14px rgba(87,230,255,.5); }
-.filestrip__item--locked{ color:var(--ink-dim); opacity:0.5 !important; }
+.filestrip__item--locked{ color:var(--ink-dim); opacity:0.5 !important; cursor:not-allowed; }
+
+/* Unlockable item - center position initially */
+.filestrip__item--unlockable{ 
+  color:var(--duck); 
+  border-color:var(--duck); 
+  opacity:0.85 !important;
+  cursor:pointer;
+  animation:unlockPulse 2s ease-in-out infinite;
+  order: 0;
+}
+.filestrip__item--unlockable:hover{
+  opacity:1 !important;
+  background:rgba(255,204,77,0.1);
+  transform:translateY(-2px);
+}
+@keyframes unlockPulse{ 
+  0%,100%{ box-shadow:0 0 6px rgba(255,204,77,0.2); } 
+  50%{ box-shadow:0 0 14px rgba(255,204,77,0.4); } 
+}
+
+/* Unlocked state - moves to left */
+.filestrip__item--unlocked{
+  color:var(--cyan); 
+  border-color:var(--cyan-soft);
+  opacity:1 !important;
+  order: -1;
+  transition:all .6s var(--ease-spring);
+}
+
+/* File panel transition */
+#filePanel{
+  transition:opacity .6s var(--ease), transform .6s var(--ease), max-height .6s var(--ease);
+  max-height: 2000px;
+  overflow: hidden;
+}
+#filePanel.hidden{
+  opacity:0;
+  transform:scale(0.92);
+  max-height:0;
+  margin:0;
+  padding:0;
+  pointer-events:none;
+}
+
+/* Day card transition */
+#dayCard{
+  transition:opacity .6s var(--ease), transform .6s var(--ease), max-height .6s var(--ease);
+  max-height: 200px;
+  overflow: hidden;
+}
+#dayCard.hidden{
+  opacity:0;
+  transform:scale(0.92);
+  max-height:0;
+  margin:0;
+  padding:0;
+  pointer-events:none;
+}
 
 .launch-links{ display:flex; gap:12px; flex-wrap:wrap; justify-content:center; margin-top:36px; }
 .launch-links__btn{
@@ -423,14 +499,14 @@ footer{ text-align:center; padding:30px 20px 50px; font-family:var(--font-displa
 </section>
 
 <div class="dossier">
-  <div class="daycard hud-panel reveal" id="dayCard">
+  <div class="daycard hud-panel reveal hidden" id="dayCard">
     <div class="hud-corner hud-corner--tl"></div>
     <div class="hud-corner hud-corner--br"></div>
     <span class="daycard__label">DAY</span>
     <span class="daycard__num" id="dayNum">00</span>
   </div>
 
-  <div class="file hud-panel reveal" id="filePanel">
+  <div class="file hud-panel reveal hidden" id="filePanel">
     <div class="hud-corner hud-corner--tl"></div>
     <div class="hud-corner hud-corner--br"></div>
     <div class="file__top">
@@ -444,13 +520,15 @@ footer{ text-align:center; padding:30px 20px 50px; font-family:var(--font-displa
 
     <div class="decrypt-row">
       <button class="decrypt-btn" id="decryptBtn" aria-expanded="false">
-        <span class="decrypt-btn__dot"></span> Decrypt intel
+        <span class="decrypt-btn__header">
+          <span class="decrypt-btn__dot"></span>
+          <span class="decrypt-btn__label-text">Decrypt intel</span>
+        </span>
+        <div class="decrypt-btn__content">
+          <p class="decrypt-btn__label">Recovered fragment</p>
+          <p class="decrypt-btn__text" id="decryptText"></p>
+        </div>
       </button>
-      <div class="decrypt-popup" id="decryptPopup">
-        <div class="decrypt-popup__arrow"></div>
-        <p class="decrypt-popup__label">Recovered fragment</p>
-        <p class="decrypt-popup__text" id="decryptText"></p>
-      </div>
     </div>
   </div>
 
@@ -464,16 +542,8 @@ footer{ text-align:center; padding:30px 20px 50px; font-family:var(--font-displa
 </footer>
 
 <script>
-/* ================================================================
-   DUCK404 — CONFIG
-   Everything that changes day-to-day lives here.
-   ================================================================ */
 const LAUNCH_ISO = "2026-09-13T00:00:00+01:00";
 
-// const LINKS = [
-//   { label: "X / Twitter", url: "https://x.com/duck404" },
-//   { label: "Telegram",    url: "https://t.me/duck404" }
-// ];
 const LINKS = [];
 
 const FILES = [
@@ -528,14 +598,13 @@ const FILES = [
     isLaunch:true }
 ];
 
-/* ================================================================
-   RUNTIME
-   ================================================================ */
 const STATUS_COLOR = {
   MISSING:"var(--duck)", SEARCHING:"var(--cyan)", TRACKING:"var(--cyan)",
   "CLOSING IN":"var(--cyan)", IDENTIFIED:"var(--violet)", IMMINENT:"var(--danger)",
   FOUND:"var(--duck)"
 };
+
+let file00Unlocked = false;
 
 function getPhaseIndex(now){
   const params = new URLSearchParams(location.search);
@@ -549,7 +618,6 @@ function getPhaseIndex(now){
   return idx;
 }
 
-// build floating letters
 (function initTitle(){
   const word = "DUCK404";
   const el = document.getElementById("markText");
@@ -563,10 +631,8 @@ function getPhaseIndex(now){
 })();
 
 let prevDigits = {};
-function render(){
-  const now = new Date();
-  const idx = getPhaseIndex(now);
-  const phase = FILES[idx];
+
+function renderFile(phase){
   const isLaunch = !!phase.isLaunch;
   const color = STATUS_COLOR[phase.status] || "var(--cyan)";
 
@@ -575,9 +641,8 @@ function render(){
   document.getElementById("statusDot").style.color = color;
 
   document.getElementById("fileTag").textContent = phase.tag;
-  document.getElementById("fileStamp").textContent = phase.stamp;
-  document.getElementById("fileStamp").style.color = color;
-  document.getElementById("fileStamp").style.borderColor = color;
+  // Stamp removed - no longer rendered
+  document.getElementById("fileStamp").style.display = "none";
   document.getElementById("fileTitle").textContent = phase.title;
   document.getElementById("fileGlitch").textContent = phase.glitch || "";
   document.getElementById("fileNote").textContent = phase.note || "";
@@ -588,23 +653,14 @@ function render(){
     dayEl.classList.remove("pulse"); void dayEl.offsetWidth; dayEl.classList.add("pulse");
   }
   document.getElementById("decryptText").textContent = phase.intel || "";
-  document.getElementById("decryptPopup").classList.remove("open");
-  document.getElementById("decryptBtn").setAttribute("aria-expanded","false");
+
+  const decryptBtn = document.getElementById("decryptBtn");
+  decryptBtn.classList.remove("expanded");
+  decryptBtn.setAttribute("aria-expanded", "false");
 
   const list = document.getElementById("fileLines");
   list.innerHTML = "";
   (phase.lines||[]).forEach(l=>{ const li=document.createElement("li"); li.textContent=l; list.appendChild(li); });
-
-  const strip = document.getElementById("filestrip");
-  strip.innerHTML = "";
-  FILES.forEach((f,i)=>{
-    if(f.isLaunch) return;
-    const el = document.createElement("span");
-    el.className = "filestrip__item " + (i===idx?"filestrip__item--current":(i<idx?"filestrip__item--seen":"filestrip__item--locked"));
-    el.style.animationDelay = (i*0.05)+"s";
-    el.textContent = i<=idx ? f.tag : "LOCKED";
-    strip.appendChild(el);
-  });
 
   if(isLaunch){
     document.getElementById("heroSub").textContent = "THE DUCK HAS BEEN FOUND";
@@ -624,6 +680,63 @@ function render(){
       const p = document.createElement("p"); p.className="launch-links__empty"; p.textContent="COMMS CHANNELS: SYNCING..."; linksWrap.appendChild(p);
     }
   }
+}
+
+function showFilePanel(){
+  const dayCard = document.getElementById("dayCard");
+  const filePanel = document.getElementById("filePanel");
+  dayCard.classList.remove("hidden");
+  filePanel.classList.remove("hidden");
+  // Trigger intersection observer
+  setTimeout(() => {
+    dayCard.classList.add("in-view");
+    filePanel.classList.add("in-view");
+  }, 50);
+}
+
+function render(){
+  const now = new Date();
+  const idx = getPhaseIndex(now);
+  const phase = FILES[idx];
+
+  renderFile(phase);
+
+  // Build filestrip
+  const strip = document.getElementById("filestrip");
+  strip.innerHTML = "";
+  FILES.forEach((f,i)=>{
+    if(f.isLaunch) return;
+    const el = document.createElement("span");
+
+    // FILE 00 special handling
+    if (i === 0) {
+      if (file00Unlocked) {
+        el.className = "filestrip__item filestrip__item--unlocked";
+        el.textContent = f.tag;
+      } else {
+        el.className = "filestrip__item filestrip__item--unlockable";
+        el.textContent = "TAP TO UNLOCK";
+        el.title = "Tap to unlock FILE 00";
+      }
+    } else {
+      el.className = "filestrip__item " + (i===idx?"filestrip__item--current":(i<idx?"filestrip__item--seen":"filestrip__item--locked"));
+      el.textContent = i<=idx ? f.tag : "LOCKED";
+    }
+
+    el.style.animationDelay = (i*0.05)+"s";
+
+    // Click handler for FILE 00 unlock
+    if (i === 0 && !file00Unlocked) {
+      el.addEventListener("click", () => {
+        file00Unlocked = true;
+        renderFile(FILES[0]);
+        render(); // Re-render strip with animation
+        showFilePanel();
+      });
+    }
+
+    strip.appendChild(el);
+  });
 
   document.getElementById("footerLog").textContent = "TRANSMISSION LOGGED // " + now.toUTCString().slice(0,22).toUpperCase();
 }
@@ -678,27 +791,39 @@ const io = new IntersectionObserver((entries)=>{
 io.observe(document.getElementById("filePanel"));
 io.observe(document.getElementById("dayCard"));
 
+// Decrypt button: morph between button and expanded panel
 document.getElementById("decryptBtn").addEventListener("click", (e)=>{
-  const btn = e.currentTarget;
-  const popup = document.getElementById("decryptPopup");
-  const willOpen = !popup.classList.contains("open");
-  popup.classList.toggle("open", willOpen);
-  btn.setAttribute("aria-expanded", String(willOpen));
+  const btn = document.getElementById("decryptBtn");
+  const isExpanded = btn.classList.contains("expanded");
 
-  const r = document.createElement("span");
-  r.className = "ripple";
-  const rect = btn.getBoundingClientRect();
-  const size = Math.max(rect.width, rect.height);
-  r.style.width = r.style.height = size+"px";
-  r.style.left = (e.clientX - rect.left - size/2)+"px";
-  r.style.top = (e.clientY - rect.top - size/2)+"px";
-  btn.style.position = "relative"; btn.style.overflow = "hidden";
-  btn.appendChild(r);
-  setTimeout(()=>r.remove(), 650);
+  if (isExpanded && e.target.closest(".decrypt-btn__close")) {
+    btn.classList.remove("expanded");
+    btn.setAttribute("aria-expanded", "false");
+    return;
+  }
+
+  if (!isExpanded) {
+    btn.classList.add("expanded");
+    btn.setAttribute("aria-expanded", "true");
+
+    const header = btn.querySelector(".decrypt-btn__header");
+    if (!header.querySelector(".decrypt-btn__close")) {
+      const closeBtn = document.createElement("span");
+      closeBtn.className = "decrypt-btn__close";
+      closeBtn.innerHTML = "&times;";
+      closeBtn.setAttribute("aria-label", "Close intel");
+      header.appendChild(closeBtn);
+    }
+    return;
+  }
 });
+
 document.addEventListener("click", (e)=>{
-  const row = document.querySelector(".decrypt-row");
-  if(row && !row.contains(e.target)) document.getElementById("decryptPopup").classList.remove("open");
+  const btn = document.getElementById("decryptBtn");
+  if (btn.classList.contains("expanded") && !btn.contains(e.target)) {
+    btn.classList.remove("expanded");
+    btn.setAttribute("aria-expanded", "false");
+  }
 });
 
 render();
