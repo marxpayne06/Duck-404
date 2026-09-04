@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#04060b">
+<title>DUCK404 — DUCK NOT FOUND</title>
+<meta name="description" content="Something disappeared at 04:04. Something big is coming. DUCK404 — the search begins.">
+
+<meta property="og:title" content="DUCK404 — DUCK NOT FOUND">
+<meta property="og:description" content="Something disappeared at 04:04. Nobody knows where it went. FIND THE DUCK.">
+<meta property="og:type" content="website">
+<!-- TODO: add og:image once artwork is ready -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="DUCK404 — DUCK NOT FOUND">
+<meta name="twitter:description" content="Something disappeared at 04:04. FIND THE DUCK.">
+
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🦆</text></svg>">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+/* Kleemax — self-hosted, files live in ./fonts/ next to this HTML.
+   Demo build only includes UPPERCASE letters, numbers and a few
+   symbols — so it's used only on all-caps / numeric elements below;
+   everything else keeps the Orbitron/Rajdhani pairing. */
+@font-face{
+  font-family:"Kleemax";
+  src:url("./KleemaxDemo.otf") format("opentype"),
+      url("./KleemaxDEMO.ttf") format("truetype");
+  font-weight:400;
+  font-display:swap;
+}
+
+/* ================================================================
+   TOKENS — cyberpunk / system-window aesthetic
+   ================================================================ */
+:root{
+  --bg:        #04060b;
+  --bg2:       #070c16;
+  --panel:     rgba(9,15,28,0.62);
+  --panel-solid: #0a1122;
+  --cyan:      #57e6ff;
+  --cyan-soft: #1c8fae;
+  --violet:    #9b7bff;
+  --duck:      #ffcc4d;
+  --danger:    #ff4463;
+  --ink:       #eaf7ff;
+  --ink-dim:   #7793a8;
+  --line:      rgba(87,230,255,0.28);
+
+  --font-display: "Orbitron", sans-serif;
+  --font-numeral: "Kleemax", "Orbitron", sans-serif;
+  --font-ui:      "Rajdhani", sans-serif;
+
+  --ease: cubic-bezier(.32,.72,0,1);
+  --ease-spring: cubic-bezier(.34,1.56,.64,1);
+
+  --maxw: 640px;
+  --cut: 14px;
+}
+
+*{ box-sizing:border-box; }
+html{ scroll-behavior:smooth; }
+
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--ink);
+  font-family:var(--font-ui);
+  font-weight:500;
+  font-size:16px;
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+  position:relative;
+  overflow-x:hidden;
+}
+
+a{ color:inherit; }
+::selection{ background:var(--cyan); color:#000; }
+
+/* ---------------- background: vignette + slow radar sweep ---------------- */
+.bg-vignette{
+  position:fixed; inset:0; z-index:0; pointer-events:none;
+  background:
+    radial-gradient(ellipse 90% 60% at 50% 0%, rgba(87,230,255,0.07), transparent 65%),
+    radial-gradient(ellipse 120% 80% at 50% 100%, rgba(0,0,0,0.6), transparent 60%),
+    linear-gradient(180deg, var(--bg2), var(--bg) 40%);
+}
+
+.bg-radar{
+  position:fixed; top:50%; left:50%; z-index:0; pointer-events:none;
+  width:min(140vw, 900px); height:min(140vw, 900px);
+  transform:translate(-50%,-50%);
+  opacity:0.16;
+}
+.bg-radar__ring{
+  position:absolute; inset:0; border-radius:50%;
+  border:1px solid rgba(87,230,255,0.5);
+}
+.bg-radar__ring:nth-child(2){ inset:14%; }
+.bg-radar__ring:nth-child(3){ inset:28%; }
+.bg-radar__sweep{
+  position:absolute; inset:0; border-radius:50%;
+  background:conic-gradient(from 0deg, rgba(87,230,255,0.5), transparent 22%, transparent 100%);
+  animation:radarSpin 9s linear infinite;
+  mix-blend-mode:screen;
+}
+@keyframes radarSpin{ to{ transform:rotate(360deg); } }
+
+.bg-grain{
+  position:fixed; inset:0; z-index:2; pointer-events:none; opacity:0.035;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+@media (prefers-reduced-motion:reduce){
+  .bg-radar__sweep{ animation:none; }
+}
+
+
+/* ---------------- boot overlay ---------------- */
+.boot{
+  position:fixed; inset:0; z-index:50;
+  background:#000;
+  display:flex; align-items:center; justify-content:center;
+  font-family:var(--font-display);
+  color:var(--cyan);
+  letter-spacing:0.3em;
+  font-size:13px;
+  animation:bootOut 0.5s var(--ease) 1.3s forwards;
+}
+.boot span{ animation:bootFlicker 1.3s steps(6) forwards; }
+@keyframes bootFlicker{
+  0%{ opacity:0; } 10%{ opacity:1; } 18%{ opacity:0.2; } 26%{ opacity:1; }
+  70%{ opacity:1; } 100%{ opacity:1; }
+}
+@keyframes bootOut{ to{ opacity:0; visibility:hidden; pointer-events:none; } }
+@media (prefers-reduced-motion:reduce){
+  .boot{ animation-duration:0.01s; animation-delay:0.2s; }
+}
+
+/* ---------------- top HUD readout ---------------- */
+.readout{
+  position:fixed; top:0; left:0; right:0; z-index:10;
+  display:flex; justify-content:space-between; align-items:center;
+  padding:14px 18px;
+  font-family:var(--font-display);
+  font-size:10px; letter-spacing:0.12em;
+  color:var(--ink-dim);
+  pointer-events:none;
+  backdrop-filter:blur(2px);
+}
+.readout__status{ transition:color .4s var(--ease); }
+.dot{ display:inline-block; width:6px; height:6px; border-radius:50%; margin-left:6px;
+  box-shadow:0 0 8px currentColor; animation:dotPulse 1.4s ease-in-out infinite; }
+@keyframes dotPulse{ 0%,100%{ opacity:1; transform:scale(1); } 50%{ opacity:.35; transform:scale(0.7); } }
+
+/* ---------------- hud panel (reusable) ---------------- */
+.hud-panel{
+  position:relative;
+  background:var(--panel);
+  border:1px solid var(--line);
+  backdrop-filter:blur(10px);
+  clip-path:polygon(var(--cut) 0, 100% 0, 100% calc(100% - var(--cut)), calc(100% - var(--cut)) 100%, 0 100%, 0 var(--cut));
+  box-shadow:0 0 0 1px rgba(87,230,255,0.04), 0 0 26px rgba(87,230,255,0.08), inset 0 0 30px rgba(87,230,255,0.03);
+}
+.hud-corner{ position:absolute; width:14px; height:14px; pointer-events:none; opacity:0.9; }
+.hud-corner::before, .hud-corner::after{ content:""; position:absolute; background:var(--cyan); box-shadow:0 0 6px var(--cyan); }
+.hud-corner--tl{ top:-1px; left:-1px; }
+.hud-corner--tl::before{ width:14px; height:2px; top:0; left:0; }
+.hud-corner--tl::after{ width:2px; height:14px; top:0; left:0; }
+.hud-corner--br{ bottom:-1px; right:-1px; }
+.hud-corner--br::before{ width:14px; height:2px; bottom:0; right:0; }
+.hud-corner--br::after{ width:2px; height:14px; bottom:0; right:0; }
+
+.hud-panel.reveal{ opacity:0; transform:scale(.92); filter:blur(8px); transition:opacity .6s var(--ease), transform .6s var(--ease), filter .6s var(--ease); }
+.hud-panel.reveal.in-view{ opacity:1; transform:scale(1); filter:blur(0); }
+@media (prefers-reduced-motion:reduce){
+  .hud-panel.reveal{ transition:opacity .2s linear; transform:none; filter:none; }
+}
+
+/* ================================================================
+   HERO
+   ================================================================ */
+.hero{
+  min-height:100svh; position:relative; z-index:2;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  text-align:center; padding:90px 20px 60px;
+}
+
+.hero__mark{
+  margin:0; font-family:var(--font-numeral); font-weight:400;
+  font-size:clamp(46px, 15vw, 92px); letter-spacing:0.03em; line-height:1;
+  color:var(--ink);
+}
+.float-letter{
+  display:inline-block; will-change:transform, filter;
+  animation:floaty 3.4s ease-in-out infinite;
+  animation-delay:calc(var(--i) * 0.09s);
+}
+.float-letter.is-duck{ color:var(--duck); }
+@keyframes floaty{
+  0%,100%{ transform:translateY(0); filter:drop-shadow(3px 4px 0 rgba(0,0,0,.65)) drop-shadow(6px 9px 10px rgba(0,0,0,.35)); }
+  50%{ transform:translateY(-10px); filter:drop-shadow(3px 12px 0 rgba(0,0,0,.55)) drop-shadow(6px 20px 14px rgba(0,0,0,.3)); }
+}
+@media (prefers-reduced-motion:reduce){ .float-letter{ animation:none; filter:drop-shadow(3px 4px 0 rgba(0,0,0,.65)); } }
+
+.hero__sub{
+  font-family:var(--font-display); font-weight:700; font-size:clamp(13px, 3.6vw, 18px);
+  letter-spacing:0.3em; color:var(--violet); text-transform:uppercase; margin:14px 0 0;
+  text-shadow:0 0 14px rgba(155,123,255,0.6);
+  opacity:0; animation:fadeUp .7s var(--ease) 1.5s forwards;
+}
+
+.hero__lines{ margin-top:28px; display:flex; flex-direction:column; gap:6px; font-size:15px; color:var(--ink); }
+.hero__lines span{ opacity:0; transform:translateY(10px); animation:fadeUp .6s var(--ease) forwards; }
+@keyframes fadeUp{ to{ opacity:1; transform:translateY(0); } }
+
+.hero__cta{
+  margin-top:40px; position:relative; overflow:hidden;
+  font-family:var(--font-display); font-weight:700; font-size:13px;
+  letter-spacing:0.18em; text-transform:uppercase;
+  color:var(--bg); background:linear-gradient(135deg, var(--cyan), var(--violet));
+  border:none; padding:16px 36px; cursor:pointer;
+  clip-path:polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+  box-shadow:0 0 24px rgba(87,230,255,0.35);
+  transition:transform .3s var(--ease-spring), box-shadow .3s var(--ease);
+  opacity:0; animation:fadeUp .6s var(--ease) 1.9s forwards;
+}
+.hero__cta:hover{ transform:translateY(-3px) scale(1.03); box-shadow:0 8px 32px rgba(87,230,255,0.5); }
+.hero__cta:active{ transform:translateY(0) scale(0.97); }
+.hero__cta:focus-visible{ outline:2px solid var(--cyan); outline-offset:4px; }
+.ripple{ position:absolute; border-radius:50%; background:rgba(255,255,255,0.5); transform:scale(0); animation:rippleOut .6s ease-out forwards; pointer-events:none; }
+@keyframes rippleOut{ to{ transform:scale(3.2); opacity:0; } }
+
+/* ---------------- countdown ---------------- */
+.countdown{ margin-top:56px; opacity:0; animation:fadeUp .7s var(--ease) 2.1s forwards; }
+.countdown__label{ font-family:var(--font-display); font-size:10px; letter-spacing:0.24em; color:var(--ink-dim); text-transform:uppercase; margin-bottom:14px; }
+.countdown__row{ display:flex; gap:12px; justify-content:center; }
+.countdown__unit{ display:flex; flex-direction:column; align-items:center; }
+.cd-tile{
+  font-family:var(--font-numeral); font-weight:400;
+  font-size:clamp(30px, 8.5vw, 44px); color:var(--cyan);
+  min-width:56px;
+  filter:drop-shadow(2px 3px 0 rgba(0,0,0,.8)) drop-shadow(4px 6px 6px rgba(0,0,0,.4));
+  font-variant-numeric:tabular-nums;
+  transition:transform .15s var(--ease);
+}
+.cd-tile.pulse{ animation:tickPulse .45s var(--ease-spring); }
+@keyframes tickPulse{ 0%{ transform:scale(1); } 35%{ transform:scale(1.18); } 100%{ transform:scale(1); } }
+.countdown__unit-label{ font-family:var(--font-display); font-size:9px; color:var(--ink-dim); letter-spacing:0.16em; margin-top:8px; }
+.countdown__sep{ font-family:var(--font-display); font-size:clamp(20px,5vw,28px); color:var(--cyan-soft); align-self:center; }
+
+.scroll-hint{
+  margin-top:64px; font-family:var(--font-display); font-size:10px; color:var(--ink-dim);
+  letter-spacing:0.14em; display:flex; flex-direction:column; align-items:center; gap:8px;
+  opacity:0; animation:fadeUp .6s var(--ease) 2.3s forwards;
+}
+.scroll-hint__arrow{ animation:bob 1.6s ease-in-out infinite; color:var(--cyan); font-size:16px; text-shadow:0 0 10px var(--cyan); }
+@keyframes bob{ 0%,100%{ transform:translateY(0);} 50%{ transform:translateY(7px);} }
+@media (prefers-reduced-motion:reduce){ .scroll-hint__arrow{ animation:none; } }
+
+/* ================================================================
+   DOSSIER / SYSTEM WINDOW
+   ================================================================ */
+.dossier{ max-width:var(--maxw); margin:0 auto; padding:30px 20px 110px; position:relative; z-index:2; }
+
+.file{ padding:28px 24px; }
+.file__top{ display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:20px; gap:10px; }
+.file__tag{
+  font-family:var(--font-numeral); font-weight:400; font-size:15px;
+  letter-spacing:0.1em; color:var(--cyan); text-transform:uppercase;
+  filter:drop-shadow(1.5px 2px 0 rgba(0,0,0,.75));
+}
+.file__stamp{
+  font-family:var(--font-numeral); font-size:11px; letter-spacing:0.1em;
+  color:var(--danger); border:1px solid var(--danger); padding:4px 9px;
+  text-transform:uppercase; white-space:nowrap;
+  box-shadow:0 0 10px rgba(255,68,99,.25);
+  animation:stampGlow 2s ease-in-out infinite;
+}
+@keyframes stampGlow{ 0%,100%{ box-shadow:0 0 10px rgba(255,68,99,.2); } 50%{ box-shadow:0 0 18px rgba(255,68,99,.45); } }
+
+.file__title{ font-family:var(--font-display); font-weight:700; font-size:19px; color:var(--ink); margin:0 0 18px; letter-spacing:0.01em; }
+
+.file__lines{ margin:0 0 18px; padding:0; list-style:none; }
+.file__lines li{
+  padding:10px 0; border-top:1px solid rgba(87,230,255,0.12); font-size:15px; color:var(--ink);
+  opacity:0; transform:translateX(-8px);
+}
+.file__lines li:first-child{ border-top:none; }
+.in-view .file__lines li{ animation:lineIn .5s var(--ease) forwards; }
+.in-view .file__lines li:nth-child(1){ animation-delay:.15s; }
+.in-view .file__lines li:nth-child(2){ animation-delay:.3s; }
+.in-view .file__lines li:nth-child(3){ animation-delay:.45s; }
+@keyframes lineIn{ to{ opacity:1; transform:translateX(0); } }
+
+.file__note{ font-size:13px; color:var(--ink-dim); font-style:italic; border-left:2px solid var(--violet); padding-left:10px; margin-top:8px; }
+
+.file__glitch{ margin-top:20px; font-family:"Rajdhani",monospace; font-size:11px; color:var(--cyan-soft); letter-spacing:0.04em; word-break:break-all; user-select:none; opacity:0.7; }
+
+/* ---------------- big day card ---------------- */
+.daycard{
+  display:flex; align-items:baseline; justify-content:center; gap:14px;
+  padding:22px 20px; margin-bottom:16px;
+}
+.daycard__label{
+  font-family:var(--font-display); font-weight:700; font-size:14px;
+  letter-spacing:0.35em; color:var(--ink-dim);
+}
+.daycard__num{
+  font-family:var(--font-numeral); font-weight:400;
+  font-size:clamp(64px, 20vw, 108px); line-height:1; color:var(--ink);
+  filter:drop-shadow(3px 4px 0 rgba(0,0,0,.85)) drop-shadow(7px 10px 10px rgba(0,0,0,.4));
+}
+.daycard__num.pulse{ animation:tickPulse .45s var(--ease-spring); }
+
+/* ---------------- decrypt button + popup ---------------- */
+.decrypt-row{ position:relative; margin-top:22px; display:flex; justify-content:center; }
+.decrypt-btn{
+  font-family:var(--font-display); font-size:11px; letter-spacing:0.12em; text-transform:uppercase;
+  color:var(--cyan); background:transparent; border:1px solid var(--cyan-soft);
+  padding:10px 18px; cursor:pointer; display:flex; align-items:center; gap:8px;
+  clip-path:polygon(7px 0,100% 0,100% calc(100% - 7px),calc(100% - 7px) 100%,0 100%,0 7px);
+  transition:background .25s var(--ease), color .25s var(--ease), transform .2s var(--ease-spring);
+}
+.decrypt-btn:hover{ background:rgba(87,230,255,0.1); transform:translateY(-1px); }
+.decrypt-btn:active{ transform:translateY(0) scale(.97); }
+.decrypt-btn:focus-visible{ outline:2px solid var(--cyan); outline-offset:3px; }
+.decrypt-btn__dot{ width:6px; height:6px; border-radius:50%; background:var(--cyan); box-shadow:0 0 8px var(--cyan); animation:dotPulse 1.4s ease-in-out infinite; }
+
+.decrypt-popup{
+  position:absolute; top:calc(100% + 14px); left:50%; transform:translateX(-50%) scale(.85);
+  width:min(280px, 84vw);
+  background:var(--panel-solid); border:1px solid var(--cyan-soft);
+  padding:16px 16px 18px; z-index:5;
+  clip-path:polygon(10px 0,100% 0,100% calc(100% - 10px),calc(100% - 10px) 100%,0 100%,0 10px);
+  box-shadow:0 12px 40px rgba(0,0,0,.55), 0 0 24px rgba(87,230,255,.12);
+  opacity:0; pointer-events:none; visibility:hidden;
+  transform-origin:top center;
+  transition:opacity .25s var(--ease), transform .25s var(--ease-spring), visibility 0s linear .25s;
+}
+.decrypt-popup.open{
+  opacity:1; transform:translateX(-50%) scale(1); pointer-events:auto; visibility:visible;
+  transition:opacity .25s var(--ease), transform .25s var(--ease-spring), visibility 0s;
+}
+.decrypt-popup__arrow{
+  position:absolute; top:-7px; left:50%; transform:translateX(-50%) rotate(45deg);
+  width:12px; height:12px; background:var(--panel-solid); border-left:1px solid var(--cyan-soft); border-top:1px solid var(--cyan-soft);
+}
+.decrypt-popup__label{ margin:0 0 6px; font-family:var(--font-display); font-size:9px; letter-spacing:0.14em; color:var(--ink-dim); text-transform:uppercase; }
+.decrypt-popup__text{ margin:0; font-size:13.5px; color:var(--ink); line-height:1.5; }
+
+
+.filestrip{ display:flex; gap:8px; flex-wrap:wrap; margin-top:24px; justify-content:center; }
+.filestrip__item{
+  font-family:var(--font-numeral); font-size:10px; letter-spacing:0.06em;
+  padding:6px 10px; border:1px solid var(--line); color:var(--ink-dim);
+  clip-path:polygon(6px 0,100% 0,100% 100%,0 100%,0 6px);
+  opacity:0; transform:translateY(6px);
+}
+.in-view .filestrip__item{ animation:fadeUp .4s var(--ease) forwards; }
+.filestrip__item--seen{ color:var(--cyan); border-color:var(--cyan-soft); }
+.filestrip__item--current{ color:var(--bg); background:var(--cyan); border-color:var(--cyan); box-shadow:0 0 14px rgba(87,230,255,.5); }
+.filestrip__item--locked{ color:var(--ink-dim); opacity:0.5 !important; }
+
+.launch-links{ display:flex; gap:12px; flex-wrap:wrap; justify-content:center; margin-top:36px; }
+.launch-links__btn{
+  font-family:var(--font-display); font-size:12px; letter-spacing:0.1em; text-transform:uppercase;
+  padding:13px 24px; border:1px solid var(--cyan); color:var(--cyan); text-decoration:none; font-weight:700;
+  clip-path:polygon(8px 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%,0 8px);
+  transition:all .25s var(--ease); box-shadow:0 0 14px rgba(87,230,255,.2);
+}
+.launch-links__btn:hover{ background:var(--cyan); color:var(--bg); box-shadow:0 0 26px rgba(87,230,255,.5); }
+.launch-links__empty{ margin-top:34px; font-family:var(--font-display); font-size:11px; color:var(--ink-dim); letter-spacing:0.08em; }
+
+footer{ text-align:center; padding:30px 20px 50px; font-family:var(--font-display); font-size:9.5px; color:var(--ink-dim); letter-spacing:0.08em; position:relative; z-index:2; }
+</style>
+</head>
+<body>
+
+<div class="boot"><span>INITIALIZING SYSTEM...</span></div>
+
+<div class="bg-vignette"></div>
+<div class="bg-radar"><div class="bg-radar__ring"></div><div class="bg-radar__ring"></div><div class="bg-radar__ring"></div><div class="bg-radar__sweep"></div></div>
+<div class="bg-grain"></div>
+
+<div class="readout">
+  <span id="readoutCase">CASE #DUCK-404</span>
+  <span class="readout__status" id="readoutStatus">STATUS: <span id="readoutStatusText">MISSING</span><span class="dot" id="statusDot"></span></span>
+</div>
+
+<section class="hero">
+  <h1 class="hero__mark" id="markText"></h1>
+  <p class="hero__sub" id="heroSub">DUCK NOT FOUND</p>
+
+  <div class="hero__lines" id="heroLines">
+    <span style="animation-delay:1.1s">Something disappeared.</span>
+    <span style="animation-delay:1.35s">Something big is coming.</span>
+  </div>
+
+  <button class="hero__cta" id="findBtn">Find the Duck</button>
+
+  <div class="countdown" id="countdownWrap">
+    <div class="countdown__label" id="countdownLabel">Countdown to launch</div>
+    <div class="countdown__row">
+      <div class="countdown__unit"><span class="cd-tile" id="cdD">00</span><span class="countdown__unit-label">days</span></div>
+      <div class="countdown__sep">:</div>
+      <div class="countdown__unit"><span class="cd-tile" id="cdH">00</span><span class="countdown__unit-label">hrs</span></div>
+      <div class="countdown__sep">:</div>
+      <div class="countdown__unit"><span class="cd-tile" id="cdM">00</span><span class="countdown__unit-label">min</span></div>
+      <div class="countdown__sep">:</div>
+      <div class="countdown__unit"><span class="cd-tile" id="cdS">00</span><span class="countdown__unit-label">sec</span></div>
+    </div>
+  </div>
+
+  <div class="scroll-hint" id="scrollHint">
+    <span>open case file</span>
+    <span class="scroll-hint__arrow">↓</span>
+  </div>
+</section>
+
+<div class="dossier">
+  <div class="daycard hud-panel reveal" id="dayCard">
+    <div class="hud-corner hud-corner--tl"></div>
+    <div class="hud-corner hud-corner--br"></div>
+    <span class="daycard__label">DAY</span>
+    <span class="daycard__num" id="dayNum">00</span>
+  </div>
+
+  <div class="file hud-panel reveal" id="filePanel">
+    <div class="hud-corner hud-corner--tl"></div>
+    <div class="hud-corner hud-corner--br"></div>
+    <div class="file__top">
+      <span class="file__tag" id="fileTag">FILE 00</span>
+      <span class="file__stamp" id="fileStamp">CLASSIFIED</span>
+    </div>
+    <h2 class="file__title" id="fileTitle">—</h2>
+    <ul class="file__lines" id="fileLines"></ul>
+    <p class="file__note" id="fileNote"></p>
+    <div class="file__glitch" id="fileGlitch"></div>
+
+    <div class="decrypt-row">
+      <button class="decrypt-btn" id="decryptBtn" aria-expanded="false">
+        <span class="decrypt-btn__dot"></span> Decrypt intel
+      </button>
+      <div class="decrypt-popup" id="decryptPopup">
+        <div class="decrypt-popup__arrow"></div>
+        <p class="decrypt-popup__label">Recovered fragment</p>
+        <p class="decrypt-popup__text" id="decryptText"></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="filestrip" id="filestrip"></div>
+
+  <div id="launchLinks"></div>
+</div>
+
+<footer>
+  <span id="footerLog">TRANSMISSION LOGGED</span>
+</footer>
+
+<script>
+/* ================================================================
+   DUCK404 — CONFIG
+   Everything that changes day-to-day lives here.
+   ================================================================ */
+const LAUNCH_ISO = "2026-09-13T00:00:00+01:00";
+
+// const LINKS = [
+//   { label: "X / Twitter", url: "https://x.com/duck404" },
+//   { label: "Telegram",    url: "https://t.me/duck404" }
+// ];
+const LINKS = [];
+
+const FILES = [
+  { from:"2026-09-06T00:00:00+01:00", tag:"FILE 00", day:"00", stamp:"OPEN", status:"MISSING",
+    title:"Pre-incident log",
+    lines:["Case opened. No reports filed yet.","Last known sighting: unknown."],
+    note:"Check back at 04:04. Or don't. It'll find you either way.",
+    glitch:"0̸4̸:̸0̸4̸ — 0̸4̸:̸0̸4̸ — 0̸4̸:̸0̸4̸ — NO SIGNAL",
+    intel:"Backup log recovered: a single quack, timestamped 04:04:00, then silence." },
+  { from:"2026-09-07T00:00:00+01:00", tag:"FILE 01", day:"01", stamp:"CLASSIFIED", status:"MISSING",
+    title:"The incident",
+    lines:["04:04. That's when it happened.","The Duck disappeared without a trace.","No footage. No warning. No goodbye."],
+    note:"Investigators found one line of corrupted code where the Duck used to be.",
+    glitch:"ERR_DUCK_NOT_FOUND // 04:04:00 // trace: none",
+    intel:"The corrupted line repeats a single string, over and over: DUCK404." },
+  { from:"2026-09-08T00:00:00+01:00", tag:"FILE 02", day:"02", stamp:"IN PROGRESS", status:"SEARCHING",
+    title:"The search",
+    lines:["The search began at dawn.","Nothing. Not a feather, not a byte.","Then, at 04:04 again — a signal."],
+    note:"Unconfirmed. Unexplained. Undeniable.",
+    glitch:"scanning quacks_db... 0 results // retry at 04:04",
+    intel:"The signal isn't random. It's counting down to something." },
+  { from:"2026-09-09T00:00:00+01:00", tag:"FILE 03", day:"03", stamp:"ACTIVE SIGNAL", status:"TRACKING",
+    title:"The signal",
+    lines:["It repeats every 4 minutes, 4 seconds.","Source: unknown. Pattern: deliberate.","Something out there wants to be found."],
+    note:"Or wants us to find something else.",
+    glitch:"signal.freq = 04m04s // origin = [REDACTED]",
+    intel:"Triangulation failed three times. Each time, at the same coordinate." },
+  { from:"2026-09-10T00:00:00+01:00", tag:"FILE 04", day:"04", stamp:"COORDS PARTIAL", status:"CLOSING IN",
+    title:"The location",
+    lines:["Coordinates recovered. Partially.","Every fix fails at the same digit.","It's close. We can't say how close."],
+    note:"The chain doesn't lie. The map does.",
+    glitch:"lat: 0X.XXXX  lon: 0X.XXXX  confidence: 40%",
+    intel:"Whatever is blocking the fix is doing it on purpose." },
+  { from:"2026-09-11T00:00:00+01:00", tag:"FILE 05", day:"05", stamp:"REVEAL PENDING", status:"IDENTIFIED",
+    title:"The reveal",
+    lines:["We know what DUCK404 is now.","We're not ready to say it out loud.","One more day. Then everyone will know."],
+    note:"The Duck was never lost. It was waiting.",
+    glitch:"decrypting FILE_06... 92%... hold.",
+    intel:"Everyone on the team agrees on one thing: it was worth the wait." },
+  { from:"2026-09-12T00:00:00+01:00", tag:"FINAL WARNING", day:"06", stamp:"LAST CALL", status:"IMMINENT",
+    title:"Tomorrow, the search ends",
+    lines:["Tomorrow, everything changes.","04:04 won't just be a mystery anymore.","Last chance to guess before the file opens."],
+    note:"Set an alarm. Or don't sleep. Your call.",
+    glitch:"T-minus 1 day // countdown locked // no more clues",
+    intel:"Whatever you're expecting, it's not that. It's better." },
+  { from:LAUNCH_ISO, tag:"FILE 06", day:"07", stamp:"FOUND", status:"FOUND",
+    title:"The Duck has been found",
+    lines:["DUCK404 is live.","Everything that disappeared is back."],
+    note:"04:04 was never the end of the story. It was the launch code.",
+    glitch:"DUCK404 // STATUS: ONLINE // WELCOME BACK",
+    intel:"Case closed. New case opened: how far can DUCK404 go?",
+    isLaunch:true }
+];
+
+/* ================================================================
+   RUNTIME
+   ================================================================ */
+const STATUS_COLOR = {
+  MISSING:"var(--duck)", SEARCHING:"var(--cyan)", TRACKING:"var(--cyan)",
+  "CLOSING IN":"var(--cyan)", IDENTIFIED:"var(--violet)", IMMINENT:"var(--danger)",
+  FOUND:"var(--duck)"
+};
+
+function getPhaseIndex(now){
+  const params = new URLSearchParams(location.search);
+  const forced = params.get("day");
+  if(forced !== null){
+    const n = parseInt(forced, 10);
+    if(!isNaN(n) && n >= 0 && n < FILES.length) return n;
+  }
+  let idx = 0;
+  for(let i=0;i<FILES.length;i++){ if(now >= new Date(FILES[i].from)) idx = i; }
+  return idx;
+}
+
+// build floating letters
+(function initTitle(){
+  const word = "DUCK404";
+  const el = document.getElementById("markText");
+  [...word].forEach((ch,i)=>{
+    const span = document.createElement("span");
+    span.className = "float-letter" + (/[0-9]/.test(ch) ? " is-duck" : "");
+    span.style.setProperty("--i", i);
+    span.textContent = ch;
+    el.appendChild(span);
+  });
+})();
+
+let prevDigits = {};
+function render(){
+  const now = new Date();
+  const idx = getPhaseIndex(now);
+  const phase = FILES[idx];
+  const isLaunch = !!phase.isLaunch;
+  const color = STATUS_COLOR[phase.status] || "var(--cyan)";
+
+  document.getElementById("readoutStatusText").textContent = phase.status;
+  document.getElementById("readoutStatus").style.color = color;
+  document.getElementById("statusDot").style.color = color;
+
+  document.getElementById("fileTag").textContent = phase.tag;
+  document.getElementById("fileStamp").textContent = phase.stamp;
+  document.getElementById("fileStamp").style.color = color;
+  document.getElementById("fileStamp").style.borderColor = color;
+  document.getElementById("fileTitle").textContent = phase.title;
+  document.getElementById("fileGlitch").textContent = phase.glitch || "";
+  document.getElementById("fileNote").textContent = phase.note || "";
+
+  const dayEl = document.getElementById("dayNum");
+  if(dayEl.textContent !== (phase.day||"00")){
+    dayEl.textContent = phase.day || "00";
+    dayEl.classList.remove("pulse"); void dayEl.offsetWidth; dayEl.classList.add("pulse");
+  }
+  document.getElementById("decryptText").textContent = phase.intel || "";
+  document.getElementById("decryptPopup").classList.remove("open");
+  document.getElementById("decryptBtn").setAttribute("aria-expanded","false");
+
+  const list = document.getElementById("fileLines");
+  list.innerHTML = "";
+  (phase.lines||[]).forEach(l=>{ const li=document.createElement("li"); li.textContent=l; list.appendChild(li); });
+
+  const strip = document.getElementById("filestrip");
+  strip.innerHTML = "";
+  FILES.forEach((f,i)=>{
+    if(f.isLaunch) return;
+    const el = document.createElement("span");
+    el.className = "filestrip__item " + (i===idx?"filestrip__item--current":(i<idx?"filestrip__item--seen":"filestrip__item--locked"));
+    el.style.animationDelay = (i*0.05)+"s";
+    el.textContent = i<=idx ? f.tag : "LOCKED";
+    strip.appendChild(el);
+  });
+
+  if(isLaunch){
+    document.getElementById("heroSub").textContent = "THE DUCK HAS BEEN FOUND";
+    document.getElementById("heroLines").innerHTML =
+      '<span style="animation-delay:1.1s">DUCK404 is live.</span><span style="animation-delay:1.35s">Everything that disappeared is back.</span>';
+    document.getElementById("findBtn").style.display = "none";
+    document.getElementById("countdownWrap").style.display = "none";
+    document.getElementById("scrollHint").querySelector("span").textContent = "open the file";
+
+    const linksWrap = document.getElementById("launchLinks");
+    linksWrap.innerHTML = "";
+    if(LINKS.length){
+      const row = document.createElement("div"); row.className = "launch-links";
+      LINKS.forEach(l=>{ const a=document.createElement("a"); a.href=l.url; a.target="_blank"; a.rel="noopener"; a.className="launch-links__btn"; a.textContent=l.label; row.appendChild(a); });
+      linksWrap.appendChild(row);
+    } else {
+      const p = document.createElement("p"); p.className="launch-links__empty"; p.textContent="COMMS CHANNELS: SYNCING..."; linksWrap.appendChild(p);
+    }
+  }
+
+  document.getElementById("footerLog").textContent = "TRANSMISSION LOGGED // " + now.toUTCString().slice(0,22).toUpperCase();
+}
+
+function setDigit(id, val){
+  const el = document.getElementById(id);
+  const str = String(val).padStart(2,"0");
+  if(prevDigits[id] !== str){
+    prevDigits[id] = str;
+    el.textContent = str;
+    el.classList.remove("pulse");
+    void el.offsetWidth;
+    el.classList.add("pulse");
+  }
+}
+
+function tickCountdown(){
+  const launch = new Date(LAUNCH_ISO);
+  const now = new Date();
+  const diff = launch - now;
+  const label = document.getElementById("countdownLabel");
+  if(diff <= 0){
+    label.textContent = "Launch complete";
+    setDigit("cdD",0); setDigit("cdH",0); setDigit("cdM",0); setDigit("cdS",0);
+    return;
+  }
+  label.textContent = "Countdown to launch";
+  const s = Math.floor(diff/1000);
+  setDigit("cdD", Math.floor(s/86400));
+  setDigit("cdH", Math.floor((s%86400)/3600));
+  setDigit("cdM", Math.floor((s%3600)/60));
+  setDigit("cdS", s%60);
+}
+
+document.getElementById("findBtn").addEventListener("click", (e)=>{
+  const btn = e.currentTarget;
+  const r = document.createElement("span");
+  r.className = "ripple";
+  const rect = btn.getBoundingClientRect();
+  const size = Math.max(rect.width, rect.height);
+  r.style.width = r.style.height = size+"px";
+  r.style.left = (e.clientX - rect.left - size/2)+"px";
+  r.style.top = (e.clientY - rect.top - size/2)+"px";
+  btn.appendChild(r);
+  setTimeout(()=>r.remove(), 650);
+  document.querySelector(".dossier").scrollIntoView({behavior:"smooth"});
+});
+
+const io = new IntersectionObserver((entries)=>{
+  entries.forEach(entry=>{ if(entry.isIntersecting) entry.target.classList.add("in-view"); });
+},{ threshold:0.25 });
+io.observe(document.getElementById("filePanel"));
+io.observe(document.getElementById("dayCard"));
+
+document.getElementById("decryptBtn").addEventListener("click", (e)=>{
+  const btn = e.currentTarget;
+  const popup = document.getElementById("decryptPopup");
+  const willOpen = !popup.classList.contains("open");
+  popup.classList.toggle("open", willOpen);
+  btn.setAttribute("aria-expanded", String(willOpen));
+
+  const r = document.createElement("span");
+  r.className = "ripple";
+  const rect = btn.getBoundingClientRect();
+  const size = Math.max(rect.width, rect.height);
+  r.style.width = r.style.height = size+"px";
+  r.style.left = (e.clientX - rect.left - size/2)+"px";
+  r.style.top = (e.clientY - rect.top - size/2)+"px";
+  btn.style.position = "relative"; btn.style.overflow = "hidden";
+  btn.appendChild(r);
+  setTimeout(()=>r.remove(), 650);
+});
+document.addEventListener("click", (e)=>{
+  const row = document.querySelector(".decrypt-row");
+  if(row && !row.contains(e.target)) document.getElementById("decryptPopup").classList.remove("open");
+});
+
+render();
+tickCountdown();
+setInterval(tickCountdown, 1000);
+setInterval(render, 60000);
+</script>
+</body>
+</html>
