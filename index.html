@@ -101,19 +101,388 @@ a{ color:inherit; }
   --font-ui: "Rajdhani", sans-serif;
 }
 
-/* Theme 2 - FILE 02: THE SEARCH - Clean & Professional */
+/* ===== THEME 2 - FILE 02: THE SEARCH - Terminal/Data Display ===== */
 .theme-2 {
-  --bg: #0a0e1a;
-  --bg2: #101624;
+  --bg: #0a0e0f;
+  --bg2: #0f1517;
   --cyan: #4fc3f7;
   --cyan-soft: #0288d1;
   --violet: #7c4dff;
   --duck: #4fc3f7;
-  --ink: #e8eaf6;
-  --ink-dim: #9ea7b5;
-  --line: rgba(79,195,247,0.2);
-  --font-display: "Orbitron", sans-serif;
-  --font-ui: "Rajdhani", sans-serif;
+  --ink: #b0bec5;
+  --ink-dim: #546e7a;
+  --line: rgba(79,195,247,0.15);
+  --font-display: "Share Tech Mono", monospace;
+  --font-ui: "Fira Code", monospace;
+}
+
+/* ===== TERMINAL/DATA DISPLAY STYLES FOR THEME 2 ===== */
+.theme-2 .hero__mark {
+  font-family: "Share Tech Mono", monospace;
+  font-weight: 400;
+  font-size: clamp(38px, 12vw, 72px);
+  letter-spacing: 0.04em;
+  color: #4fc3f7;
+  text-shadow: 0 0 30px rgba(79,195,247,0.15);
+}
+
+.theme-2 .hero__mark .float-letter.is-duck {
+  color: #4fc3f7;
+}
+
+.theme-2 .hero__sub {
+  font-family: "Share Tech Mono", monospace;
+  font-weight: 400;
+  color: #78909c;
+  letter-spacing: 0.3em;
+  font-size: clamp(11px, 2.5vw, 14px);
+  text-shadow: none;
+  opacity: 0.7;
+}
+
+.theme-2 .hero__lines {
+  font-family: "Fira Code", monospace;
+  font-size: 13px;
+  font-weight: 300;
+  color: #78909c;
+}
+
+.theme-2 .hero__cta {
+  font-family: "Share Tech Mono", monospace;
+  font-weight: 400;
+  letter-spacing: 0.2em;
+  background: transparent;
+  border: 1px solid #4fc3f7;
+  color: #4fc3f7;
+  box-shadow: none;
+  padding: 14px 32px;
+  font-size: 12px;
+  clip-path: none;
+  border-radius: 0;
+}
+
+.theme-2 .hero__cta:hover {
+  background: rgba(79,195,247,0.08);
+  box-shadow: 0 0 30px rgba(79,195,247,0.1);
+}
+
+.theme-2 .countdown__label {
+  font-family: "Share Tech Mono", monospace;
+  font-weight: 300;
+  letter-spacing: 0.25em;
+  color: #546e7a;
+  font-size: 9px;
+}
+
+.theme-2 .cd-tile {
+  font-family: "Share Tech Mono", monospace;
+  font-weight: 400;
+  color: #4fc3f7;
+  font-size: clamp(28px, 7vw, 40px);
+  min-width: 44px;
+  filter: none;
+}
+
+.theme-2 .cd-tile.pulse {
+  animation: terminalPulse 0.45s ease;
+}
+
+@keyframes terminalPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+.theme-2 .countdown__unit-label {
+  font-family: "Share Tech Mono", monospace;
+  font-weight: 300;
+  font-size: 8px;
+  letter-spacing: 0.15em;
+  color: #546e7a;
+}
+
+.theme-2 .countdown__sep {
+  font-family: "Share Tech Mono", monospace;
+  color: #37474f;
+  font-size: clamp(18px, 4vw, 24px);
+}
+
+.theme-2 .readout {
+  font-family: "Share Tech Mono", monospace;
+  font-weight: 300;
+  letter-spacing: 0.08em;
+  color: #546e7a;
+  background: rgba(10,14,15,0.6);
+  backdrop-filter: blur(4px);
+}
+
+.theme-2 .readout__status {
+  color: #78909c;
+}
+
+.theme-2 .dot {
+  background: #4fc3f7;
+  box-shadow: 0 0 8px rgba(79,195,247,0.4);
+}
+
+.theme-2 .hud-panel {
+  background: rgba(15,21,23,0.85);
+  border-color: rgba(79,195,247,0.12);
+  backdrop-filter: blur(6px);
+  clip-path: none;
+  border-radius: 0;
+  box-shadow: 0 0 0 1px rgba(79,195,247,0.05);
+}
+
+.theme-2 .hud-corner {
+  display: none;
+}
+
+/* Terminal-style file display */
+.theme-2 .file {
+  padding: 20px 22px;
+}
+
+.theme-2 .file__top {
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgba(79,195,247,0.08);
+  padding-bottom: 12px;
+  margin-bottom: 16px;
+}
+
+.theme-2 .file__tag {
+  font-family: "Share Tech Mono", monospace;
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.1em;
+  color: #4fc3f7;
+  filter: none;
+  opacity: 0.8;
+}
+
+.theme-2 .file__stamp {
+  font-family: "Share Tech Mono", monospace;
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  color: #4fc3f7;
+  border: 1px solid rgba(79,195,247,0.3);
+  padding: 3px 10px;
+  animation: none;
+  box-shadow: none;
+  background: rgba(79,195,247,0.05);
+}
+
+.theme-2 .file__title {
+  font-family: "Share Tech Mono", monospace;
+  font-size: 16px;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  color: #b0bec5;
+  margin-bottom: 14px;
+}
+
+/* Data display lines */
+.theme-2 .file__lines {
+  margin: 0 0 16px;
+}
+
+.theme-2 .file__lines li {
+  padding: 6px 0;
+  border-top: none;
+  font-family: "Fira Code", monospace;
+  font-size: 13px;
+  font-weight: 300;
+  color: #90a4ae;
+  opacity: 1;
+  transform: none;
+  border-left: 2px solid transparent;
+  padding-left: 12px;
+  transition: border-color 0.3s ease;
+}
+
+.theme-2 .file__lines li:first-child {
+  border-left-color: #4fc3f7;
+}
+
+.theme-2 .file__lines li:nth-child(2) {
+  border-left-color: rgba(79,195,247,0.4);
+}
+
+.theme-2 .file__lines li:nth-child(3) {
+  border-left-color: rgba(79,195,247,0.2);
+}
+
+.theme-2 .file__note {
+  font-family: "Fira Code", monospace;
+  font-size: 12px;
+  font-weight: 300;
+  color: #546e7a;
+  border-left: 2px solid rgba(79,195,247,0.3);
+  padding-left: 12px;
+  font-style: normal;
+}
+
+.theme-2 .file__glitch {
+  display: none;
+}
+
+/* Terminal decrypt button */
+.theme-2 .decrypt-btn {
+  font-family: "Share Tech Mono", monospace;
+  font-weight: 300;
+  letter-spacing: 0.12em;
+  color: #4fc3f7;
+  border: 1px solid rgba(79,195,247,0.2);
+  background: rgba(79,195,247,0.04);
+  clip-path: none;
+  border-radius: 0;
+  padding: 8px 16px;
+}
+
+.theme-2 .decrypt-btn:hover {
+  background: rgba(79,195,247,0.08);
+  border-color: rgba(79,195,247,0.4);
+}
+
+.theme-2 .decrypt-btn.expanded {
+  background: rgba(15,21,23,0.95);
+  border-color: #4fc3f7;
+  border-radius: 0;
+  box-shadow: 0 0 40px rgba(79,195,247,0.05);
+}
+
+.theme-2 .decrypt-btn__header {
+  font-family: "Share Tech Mono", monospace;
+  font-weight: 300;
+  color: #4fc3f7;
+}
+
+.theme-2 .decrypt-btn__label {
+  font-family: "Share Tech Mono", monospace;
+  font-weight: 300;
+  color: #546e7a;
+  font-size: 8px;
+}
+
+.theme-2 .decrypt-btn__text {
+  font-family: "Fira Code", monospace;
+  font-weight: 300;
+  color: #b0bec5;
+  font-size: 13px;
+}
+
+/* Terminal day card */
+.theme-2 .daycard {
+  padding: 16px 20px;
+  gap: 10px;
+  border-bottom: 1px solid rgba(79,195,247,0.06);
+}
+
+.theme-2 .daycard__label {
+  font-family: "Share Tech Mono", monospace;
+  font-weight: 300;
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  color: #546e7a;
+}
+
+.theme-2 .daycard__num {
+  font-family: "Share Tech Mono", monospace;
+  font-weight: 400;
+  font-size: clamp(48px, 14vw, 72px);
+  color: #4fc3f7;
+  filter: none;
+  text-shadow: 0 0 30px rgba(79,195,247,0.1);
+}
+
+.theme-2 .scroll-hint {
+  font-family: "Share Tech Mono", monospace;
+  font-weight: 300;
+  color: #546e7a;
+  font-size: 9px;
+  letter-spacing: 0.15em;
+}
+
+.theme-2 .scroll-hint__arrow {
+  color: #4fc3f7;
+  text-shadow: 0 0 20px rgba(79,195,247,0.2);
+}
+
+/* Terminal filestrip */
+.theme-2 .filestrip__item {
+  font-family: "Share Tech Mono", monospace;
+  font-weight: 300;
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  border-color: rgba(79,195,247,0.1);
+  clip-path: none;
+  border-radius: 0;
+  padding: 4px 12px;
+}
+
+.theme-2 .filestrip__item--seen {
+  color: #78909c;
+  border-color: rgba(79,195,247,0.2);
+}
+
+.theme-2 .filestrip__item--current {
+  color: #0a0e0f;
+  background: #4fc3f7;
+  border-color: #4fc3f7;
+  box-shadow: 0 0 20px rgba(79,195,247,0.2);
+}
+
+.theme-2 .filestrip__item--locked {
+  color: #37474f;
+  border-color: rgba(79,195,247,0.05);
+}
+
+/* Terminal navigation */
+.theme-2 .day-nav__btn {
+  font-family: "Share Tech Mono", monospace;
+  font-weight: 300;
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  color: #546e7a;
+  border-color: rgba(79,195,247,0.1);
+  clip-path: none;
+  border-radius: 0;
+  padding: 4px 14px;
+}
+
+.theme-2 .day-nav__btn:hover:not(:disabled) {
+  color: #4fc3f7;
+  border-color: rgba(79,195,247,0.3);
+  background: rgba(79,195,247,0.04);
+}
+
+/* Terminal footer */
+.theme-2 footer {
+  font-family: "Share Tech Mono", monospace;
+  font-weight: 300;
+  color: #37474f;
+  font-size: 8px;
+  letter-spacing: 0.1em;
+}
+
+/* Terminal background modifications */
+.theme-2 .bg-vignette {
+  background: 
+    radial-gradient(ellipse 120% 80% at 50% 100%, rgba(0,0,0,0.8), transparent 60%),
+    linear-gradient(180deg, var(--bg2), var(--bg) 40%);
+}
+
+.theme-2 .bg-radar {
+  opacity: 0.06;
+}
+
+.theme-2 .bg-radar__ring {
+  border-color: rgba(79,195,247,0.1);
+}
+
+.theme-2 .bg-radar__sweep {
+  background: conic-gradient(from 0deg, rgba(79,195,247,0.2), transparent 22%, transparent 100%);
 }
 
 /* ===== RADIAL RIPPLE OVERLAY ===== */
@@ -165,11 +534,6 @@ a{ color:inherit; }
   }
 }
 
-/* ===== ELEMENT TRANSITIONS ===== */
-.theme-transition {
-  transition: all var(--transition-duration) var(--ease);
-}
-
 .glitch-flash {
   position: fixed;
   inset: 0;
@@ -188,7 +552,7 @@ a{ color:inherit; }
   100% { opacity: 0; }
 }
 
-/* ===== EXISTING STYLES ===== */
+/* ===== REST OF STYLES (kept minimal for brevity) ===== */
 .bg-vignette{
   position:fixed; inset:0; z-index:0; pointer-events:none;
   background:
@@ -547,158 +911,6 @@ a{ color:inherit; }
   transition:all .6s var(--ease-spring);
 }
 
-/* ===== FILE 02 SPECIFIC LAYOUT - Clean & Professional ===== */
-/* When theme 2 is active, restructure the file panel */
-.theme-2 .file {
-  padding: 20px 18px;
-}
-
-.theme-2 .file__top {
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 6px;
-  margin-bottom: 16px;
-}
-
-.theme-2 .file__tag {
-  font-size: 12px;
-  letter-spacing: 0.2em;
-  opacity: 0.7;
-}
-
-.theme-2 .file__stamp {
-  font-size: 10px;
-  padding: 3px 8px;
-  border-color: var(--cyan);
-  color: var(--cyan);
-  animation: none;
-  box-shadow: none;
-}
-
-.theme-2 .file__title {
-  font-size: 22px;
-  font-weight: 500;
-  letter-spacing: 0.05em;
-  margin-bottom: 12px;
-}
-
-.theme-2 .file__lines li {
-  padding: 8px 0;
-  border-top: 1px solid rgba(79,195,247,0.08);
-  font-size: 14px;
-  font-weight: 400;
-  opacity: 1;
-  transform: none;
-}
-
-.theme-2 .file__lines li:first-child {
-  border-top: none;
-}
-
-.theme-2 .file__note {
-  font-size: 13px;
-  border-left-color: var(--cyan);
-  opacity: 0.8;
-  font-style: normal;
-  font-weight: 300;
-}
-
-.theme-2 .file__glitch {
-  display: none;
-}
-
-.theme-2 .decrypt-btn {
-  border-color: rgba(79,195,247,0.3);
-  color: var(--cyan);
-  font-weight: 300;
-  letter-spacing: 0.15em;
-}
-
-.theme-2 .decrypt-btn:hover {
-  background: rgba(79,195,247,0.06);
-}
-
-/* ===== THEME 2 - DAY CARD ===== */
-.theme-2 .daycard {
-  padding: 16px 20px;
-  gap: 10px;
-}
-
-.theme-2 .daycard__label {
-  font-size: 12px;
-  letter-spacing: 0.25em;
-  opacity: 0.6;
-}
-
-.theme-2 .daycard__num {
-  font-size: clamp(48px, 16vw, 80px);
-  font-weight: 300;
-}
-
-/* ===== THEME 2 - HERO ===== */
-.theme-2 .hero__mark {
-  font-size: clamp(36px, 12vw, 72px);
-  letter-spacing: 0.06em;
-  font-weight: 300;
-}
-
-.theme-2 .hero__sub {
-  font-weight: 400;
-  letter-spacing: 0.4em;
-  font-size: clamp(11px, 2.8vw, 15px);
-}
-
-.theme-2 .hero__lines {
-  font-size: 14px;
-  font-weight: 300;
-}
-
-.theme-2 .hero__cta {
-  font-weight: 500;
-  letter-spacing: 0.22em;
-  background: linear-gradient(135deg, var(--cyan), var(--violet));
-  padding: 14px 32px;
-  font-size: 12px;
-}
-
-/* ===== THEME 2 - COUNTDOWN ===== */
-.theme-2 .cd-tile {
-  font-weight: 300;
-  font-size: clamp(26px, 7vw, 38px);
-  min-width: 44px;
-}
-
-.theme-2 .countdown__label {
-  font-weight: 400;
-  letter-spacing: 0.3em;
-}
-
-.theme-2 .countdown__unit-label {
-  font-weight: 300;
-  font-size: 8px;
-  letter-spacing: 0.2em;
-}
-
-/* ===== THEME 2 - READOUT ===== */
-.theme-2 .readout {
-  font-weight: 300;
-  letter-spacing: 0.15em;
-  opacity: 0.8;
-}
-
-/* ===== THEME 2 - HUD PANEL ===== */
-.theme-2 .hud-panel {
-  backdrop-filter: blur(6px);
-  border-color: rgba(79,195,247,0.12);
-  box-shadow: 0 0 0 1px rgba(79,195,247,0.02), 0 0 20px rgba(79,195,247,0.04);
-}
-
-.theme-2 .hud-corner::before,
-.theme-2 .hud-corner::after {
-  opacity: 0.6;
-}
-
-/* ===== NAVIGATION ARROWS ===== */
 .day-nav {
   display: none;
   justify-content: center;
@@ -734,13 +946,6 @@ a{ color:inherit; }
 .day-nav__btn:disabled {
   opacity: 0.3;
   cursor: not-allowed;
-}
-
-.theme-2 .day-nav__btn {
-  font-weight: 300;
-  font-size: 9px;
-  letter-spacing: 0.15em;
-  padding: 5px 12px;
 }
 
 #filePanel.hidden,
@@ -889,7 +1094,7 @@ const FILES = [
     intel:"The corrupted line repeats a single string, over and over: DUCK404.",
     theme: 1 },
   { from:"2026-09-08T00:00:00+01:00", tag:"FILE 02", day:"02", stamp:"ACTIVE SIGNAL", status:"SEARCHING",
-    title:"The search",
+    title:"THE SEARCH // DATA LOG",
     lines:["The search began at dawn.","Nothing. Not a feather, not a byte.","Then, at 04:04 again — a signal."],
     note:"Unconfirmed. Unexplained. Undeniable.",
     glitch:"scanning quacks_db... 0 results // retry at 04:04",
