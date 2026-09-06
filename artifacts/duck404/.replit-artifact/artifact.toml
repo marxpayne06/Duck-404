@@ -1,0 +1,28 @@
+kind = "web"
+previewPath = "/"
+title = "DUCK404 — Duck Not Found"
+description = "A mysterious interactive countdown website for the DUCK404 internet investigation, revealing a new classified case file each day until launch."
+version = "1.0.0"
+id = "artifacts/duck404"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 18587
+
+[services.development]
+run = "pnpm --filter @workspace/duck404 run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/duck404", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/duck404/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "18587"
+BASE_PATH = "/"
